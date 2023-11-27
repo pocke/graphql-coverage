@@ -2,7 +2,7 @@
 
 require_relative "coverage/version"
 
-module Graphql
+module GraphQL
   module Coverage
     class Error < StandardError; end
     # Your code goes here...

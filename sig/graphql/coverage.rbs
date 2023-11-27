@@ -1,4 +1,4 @@
-module Graphql
+module GraphQL
   module Coverage
     VERSION: String
     # See the writing guide of rbs: https://github.com/ruby/rbs#guides

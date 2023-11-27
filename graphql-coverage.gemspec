@@ -4,7 +4,7 @@ require_relative "lib/graphql/coverage/version"
 
 Gem::Specification.new do |spec|
   spec.name = "graphql-coverage"
-  spec.version = Graphql::Coverage::VERSION
+  spec.version = GraphQL::Coverage::VERSION
   spec.authors = ["Masataka Pocke Kuwabara"]
   spec.email = ["kuwabara@pocke.me"]
 
