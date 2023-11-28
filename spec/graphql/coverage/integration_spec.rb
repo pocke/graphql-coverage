@@ -1,42 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe GraphQL::Coverage do
-  let(:schema) do
-    Class.new(GraphQL::Schema) do
-      fixed_lazy = Class.new do
-        def value = 42
-      end
-
-      lazy_resolve fixed_lazy, :value
-
-      article_type = Class.new(GraphQL::Schema::Object) do
-        graphql_name 'Article'
-
-        field :title, String, null: false
-        field :body, String, null: false
-      end
-
-      query_type = Class.new(GraphQL::Schema::Object) do
-        graphql_name 'Query'
-
-        field :foo, String, null: false
-        def foo = "foo"
-
-        field :title, String, null: false
-        def title = "foobar"
-
-        field :articles, [article_type], null: false
-        def articles = [{ title: "foo", body: "bar" }, { title: "baz", body: "qux" }]
-
-        field :with_lazy, Integer, null: false
-        define_method :with_lazy do
-          fixed_lazy.new
-        end
-      end
-
-      query query_type
-    end
-  end
+  let(:schema) { TestSchema }
 
   def execute!(query)
     schema.execute(query).tap do |result|
@@ -155,6 +120,31 @@ RSpec.describe GraphQL::Coverage do
         it 'returns an empty array' do
           expect(GraphQL::Coverage.result).to be_empty
         end
+      end
+    end
+  end
+
+  describe '.dump' do
+    before do
+      execute!(<<~GRAPHQL)
+        query {
+          foo
+        }
+      GRAPHQL
+    end
+
+    it 'dumps called fields to file' do
+      Dir.mktmpdir('graphql-coverage') do |dir|
+        path = File.join(dir, 'graphql-coverage.json')
+        GraphQL::Coverage.dump(path)
+
+        saved = JSON.parse(File.read(path))
+        expect(saved).to eq({
+          'calls' => [
+            { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+          ],
+          'schema' => 'TestSchema',
+        })
       end
     end
   end
