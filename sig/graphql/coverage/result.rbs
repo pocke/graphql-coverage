@@ -1,0 +1,18 @@
+module GraphQL
+  module Coverage
+    # @api private
+    class Result
+      @calls: Array[Call]
+
+      @schema: singleton(GraphQL::Schema)
+
+      def initialize: (calls: Array[Call], schema: singleton(GraphQL::Schema)) -> void
+
+      def calculate: () -> Array[Call]
+
+      private
+
+      def available_fields: () -> Array[Call]
+    end
+  end
+end

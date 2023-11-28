@@ -1,0 +1,39 @@
+module GraphQL
+  interface _GraphQLName
+    def graphql_name: () -> String
+  end
+
+  class Schema
+    def self.types: (?untyped context) -> Hash[String, Class]
+
+    def self.trace_with: (Module trace_mod, ?mode: Symbol | Array[Symbol], **untyped) -> void
+
+    class Field
+      attr_accessor owner: Class & _GraphQLName
+      attr_reader name: String
+
+      alias graphql_name name
+    end
+
+    class Member
+      module HashFields
+        module ObjectMethods
+          def fields: (?untyped context) -> Hash[String, Field]
+        end
+      end
+    end
+
+    class Object < Member
+      extend Member::HashFields
+      extend Member::HashFields::ObjectMethods
+    end
+  end
+
+  module Tracing
+    class Trace
+      def execute_field: (field: GraphQL::Schema::Field, query: untyped, ast_node: untyped, arguments: untyped, object: untyped) -> untyped
+
+      def execute_field_lazy: (field: GraphQL::Schema::Field, query: untyped, ast_node: untyped, arguments: untyped, object: untyped) -> untyped
+    end
+  end
+end

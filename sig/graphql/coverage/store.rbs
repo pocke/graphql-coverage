@@ -1,0 +1,20 @@
+module GraphQL
+  module Coverage
+    # @api private
+    class Store
+      self.@current: untyped
+
+      @calls: untyped
+
+      def self.current: () -> untyped
+
+      def self.reset!: () -> untyped
+
+      attr_reader calls: untyped
+
+      def initialize: () -> void
+
+      def append: (untyped call) -> untyped
+    end
+  end
+end
