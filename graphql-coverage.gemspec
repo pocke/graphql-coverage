@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Coverage for GraphQL"
   spec.homepage = "https://github.com/pocke/graphql-coverage"
   spec.required_ruby_version = ">= 3.0"
+  spec.license = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
