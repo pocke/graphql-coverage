@@ -3,6 +3,12 @@
 RSpec.describe GraphQL::Coverage do
   let(:schema) do
     Class.new(GraphQL::Schema) do
+      fixed_lazy = Class.new do
+        def value = 42
+      end
+
+      lazy_resolve fixed_lazy, :value
+
       article_type = Class.new(GraphQL::Schema::Object) do
         graphql_name 'Article'
 
@@ -18,6 +24,11 @@ RSpec.describe GraphQL::Coverage do
 
         field :articles, [article_type], null: false
         def articles = [{ title: "foo", body: "bar" }, { title: "baz", body: "qux" }]
+
+        field :with_lazy, Integer, null: false
+        define_method :with_lazy do
+          fixed_lazy.new
+        end
       end
 
       query query_type
@@ -35,6 +46,7 @@ RSpec.describe GraphQL::Coverage do
         expect(GraphQL::Coverage.result).to contain_exactly(
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'articles', result_type: nil),
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Article', field: 'title', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Article', field: 'body', result_type: nil),
         )
@@ -55,6 +67,7 @@ RSpec.describe GraphQL::Coverage do
       it 'returns result without called fields' do
         expect(GraphQL::Coverage.result).to contain_exactly(
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Article', field: 'body', result_type: nil),
         )
       end
@@ -76,6 +89,12 @@ RSpec.describe GraphQL::Coverage do
             articles {
               body
             }
+          }
+        GRAPHQL
+
+        schema.execute(<<~GRAPHQL)
+          query {
+            withLazy
           }
         GRAPHQL
       end
