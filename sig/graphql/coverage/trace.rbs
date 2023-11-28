@@ -1,0 +1,10 @@
+module GraphQL
+  module Coverage
+    # @api private
+    module Trace : GraphQL::Tracing::Trace
+      def execute_field: (field: GraphQL::Schema::Field, query: untyped, ast_node: untyped, arguments: untyped, object: untyped) -> untyped
+
+      alias execute_field_lazy execute_field
+    end
+  end
+end

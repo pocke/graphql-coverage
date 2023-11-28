@@ -19,17 +19,17 @@ module GraphQL
 
     def self.dump(file_path)
       calls = Store.current.calls.map(&:to_h)
-      content = JSON.generate({ calls: calls, schema: schema.name })
-      File.write(file_path, content)
+      content = JSON.generate({ calls: calls, schema: @schema.name })
+      File.write(_ = file_path, content)
     end
 
     def self.load(*file_paths)
       file_paths.each do |file_path|
-        content = JSON.parse(File.read(file_path))
+        content = JSON.parse(File.read(_ = file_path))
         self.schema = Object.const_get(content['schema'])
 
         content['calls'].each do |call_hash|
-          call = Call.from_graphql_object(call_hash)
+          call = Call.new(owner: call_hash['owner'], field: call_hash['field'], result_type: call_hash['result_type'])
           Store.current.append(call)
         end
       end
@@ -53,7 +53,7 @@ module GraphQL
 
     # @api private
     def self.reset!
-      @schema = nil
+      __skip__ = @schema = nil
       Store.reset!
     end
 

@@ -1,0 +1,9 @@
+module GraphQL
+  module Coverage
+    module Errors
+      class SchemaMismatch < StandardError
+        def initialize: (expected: untyped, got: untyped) -> void
+      end
+    end
+  end
+end

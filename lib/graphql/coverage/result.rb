@@ -16,7 +16,8 @@ module GraphQL
       private
 
       def available_fields
-        target_types = @schema.types.select { |name, klass| klass < GraphQL::Schema::Object && !name.start_with?('__') }.values
+        # @type var target_types: Array[singleton(GraphQL::Schema::Object)]
+        target_types = _ = @schema.types.select { |name, klass| klass < GraphQL::Schema::Object && !name.start_with?('__') }.values
 
         target_types.flat_map do |klass|
           klass.fields.values.map do |field|

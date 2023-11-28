@@ -1,0 +1,20 @@
+---
+path: ".gem_rbs_collection"
+gems:
+- name: graphql
+  version: '1.12'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 4b0d2f72e63b6c3e92dc54e19ce23dd24524f9a7
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: json
+  version: '0'
+  source:
+    type: stdlib
+- name: pathname
+  version: '0'
+  source:
+    type: stdlib
+gemfile_lock_path: Gemfile.lock

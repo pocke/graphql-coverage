@@ -1,6 +1,21 @@
 module GraphQL
   module Coverage
-    VERSION: String
-    # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+    self.@schema: singleton(GraphQL::Schema)
+
+    def self.enable: (singleton(GraphQL::Schema) schema) -> void
+
+    def self.dump: (String | Pathname file_path) -> void
+
+    def self.load: (*String | Pathname file_paths) -> void
+
+    def self.report: (?output: IO) -> void
+
+    def self.result: () -> Array[Call]
+
+    # @api private
+    def self.reset!: () -> untyped
+
+    # @api private
+    def self.schema=: (untyped schema) -> untyped
   end
 end
