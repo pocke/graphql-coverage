@@ -57,9 +57,8 @@ module GraphQL
       Store.reset!
     end
 
-    private
-
-    def self.schema=(schema)
+    # @api private
+    private_class_method def self.schema=(schema)
       if @schema && @schema != schema
         raise Errors::SchemaMismatch.new(expected: @schema, got: schema)
       end
