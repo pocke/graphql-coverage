@@ -7,3 +7,6 @@ Style:
 
 Metrics:
   Enabled: false
+
+Layout/LineLength:
+  Enabled: false

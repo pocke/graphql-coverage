@@ -17,7 +17,7 @@ RSpec.describe GraphQL::Coverage do
         def foo = "foo"
 
         field :articles, [article_type], null: false
-        def articles = [{ title: "foo", body: "bar"}, { title: "baz", body: "qux"}]
+        def articles = [{ title: "foo", body: "bar" }, { title: "baz", body: "qux" }]
       end
 
       query query_type
