@@ -22,6 +22,9 @@ RSpec.describe GraphQL::Coverage do
         field :foo, String, null: false
         def foo = "foo"
 
+        field :title, String, null: false
+        def title = "foobar"
+
         field :articles, [article_type], null: false
         def articles = [{ title: "foo", body: "bar" }, { title: "baz", body: "qux" }]
 
@@ -35,6 +38,12 @@ RSpec.describe GraphQL::Coverage do
     end
   end
 
+  def execute!(query)
+    schema.execute(query).tap do |result|
+      raise result.to_h.inspect if result['errors']
+    end
+  end
+
   before do
     GraphQL::Coverage.reset!
     GraphQL::Coverage.enable(schema)
@@ -45,6 +54,7 @@ RSpec.describe GraphQL::Coverage do
       it 'returns result including all fields' do
         expect(GraphQL::Coverage.result).to contain_exactly(
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'articles', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Article', field: 'title', result_type: nil),
@@ -55,7 +65,7 @@ RSpec.describe GraphQL::Coverage do
 
     context "with missing field calls" do
       before do
-        schema.execute(<<~GRAPHQL)
+        execute!(<<~GRAPHQL)
           query {
             articles {
               title
@@ -67,6 +77,7 @@ RSpec.describe GraphQL::Coverage do
       it 'returns result without called fields' do
         expect(GraphQL::Coverage.result).to contain_exactly(
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Article', field: 'body', result_type: nil),
         )
@@ -75,7 +86,7 @@ RSpec.describe GraphQL::Coverage do
 
     context 'when all fields are called' do
       before do
-        schema.execute(<<~GRAPHQL)
+        execute!(<<~GRAPHQL)
           query {
             articles {
               title
@@ -83,7 +94,7 @@ RSpec.describe GraphQL::Coverage do
           }
         GRAPHQL
 
-        schema.execute(<<~GRAPHQL)
+        execute!(<<~GRAPHQL)
           query {
             foo
             articles {
@@ -92,8 +103,9 @@ RSpec.describe GraphQL::Coverage do
           }
         GRAPHQL
 
-        schema.execute(<<~GRAPHQL)
+        execute!(<<~GRAPHQL)
           query {
+            title
             withLazy
           }
         GRAPHQL
@@ -101,6 +113,48 @@ RSpec.describe GraphQL::Coverage do
 
       it 'returns an empty array' do
         expect(GraphQL::Coverage.result).to be_empty
+      end
+    end
+
+    context 'when ignoreed_fields is specified' do
+      context 'with wildcard' do
+        before do
+          GraphQL::Coverage.ignored_fields = [
+            { owner: 'Query', field: '*' },
+            { owner: '*', field: 'title' },
+          ]
+
+          execute!(<<~GRAPHQL)
+            query {
+              articles { body }
+            }
+          GRAPHQL
+        end
+
+        it 'returns an empty array' do
+          expect(GraphQL::Coverage.result).to be_empty
+        end
+      end
+
+      context 'with specific field' do
+        before do
+          GraphQL::Coverage.ignored_fields = [
+            { owner: 'Query', field: 'foo' },
+            { owner: 'Article', field: 'title' },
+          ]
+
+          execute!(<<~GRAPHQL)
+            query {
+              title
+              withLazy
+              articles { body }
+            }
+          GRAPHQL
+        end
+
+        it 'returns an empty array' do
+          expect(GraphQL::Coverage.result).to be_empty
+        end
       end
     end
   end

@@ -12,6 +12,10 @@ require_relative "coverage/result"
 
 module GraphQL
   module Coverage
+    class << self
+      attr_accessor :ignored_fields
+    end
+
     def self.enable(schema)
       self.schema = schema
       schema.trace_with(Trace)
@@ -48,12 +52,13 @@ module GraphQL
     end
 
     def self.result
-      Result.new(calls: Store.current.calls, schema: @schema).calculate
+      Result.new(calls: Store.current.calls, schema: @schema, ignored_fields: ignored_fields).calculate
     end
 
     # @api private
     def self.reset!
       __skip__ = @schema = nil
+      self.ignored_fields = []
       Store.reset!
     end
 

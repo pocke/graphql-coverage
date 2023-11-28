@@ -1,5 +1,8 @@
 module GraphQL
   module Coverage
+    type ignored_field = { owner: String, field: String }
+    attr_accessor self.ignored_fields: Array[ignored_field]
+
     self.@schema: singleton(GraphQL::Schema)
 
     def self.enable: (singleton(GraphQL::Schema) schema) -> void
