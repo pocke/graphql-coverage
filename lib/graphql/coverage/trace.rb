@@ -11,7 +11,12 @@ module GraphQL
         result
       end
 
-      alias execute_field_lazy execute_field
+      def execute_field_lazy(field:, query:, ast_node:, arguments:, object:)
+        result = super
+        # TODO: result type
+        Store.current.append(Call.from_graphql_object(field: field, result_type: nil))
+        result
+      end
     end
   end
 end
