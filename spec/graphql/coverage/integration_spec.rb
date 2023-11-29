@@ -134,7 +134,7 @@ RSpec.describe GraphQL::Coverage do
     end
 
     it 'dumps called fields to file' do
-      Dir.mktmpdir('graphql-coverage') do |dir|
+      Dir.mktmpdir('graphql-coverage-test') do |dir|
         path = File.join(dir, 'graphql-coverage.json')
         GraphQL::Coverage.dump(path)
 
@@ -145,6 +145,97 @@ RSpec.describe GraphQL::Coverage do
           ],
           'schema' => 'TestSchema',
         })
+      end
+    end
+  end
+
+  describe '.load' do
+    let(:tmpdir) { Dir.mktmpdir('graphql-coverage-test') }
+
+    after do
+      FileUtils.rm_rf(tmpdir)
+    end
+
+    context 'when files have the same shcmea' do
+      before do
+        content1 = {
+          'calls' => [
+            { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+          ],
+          'schema' => 'TestSchema',
+        }
+        content2 = {
+          'calls' => [
+            { 'owner' => 'Query', 'field' => 'title', 'result_type' => nil },
+          ],
+          'schema' => 'TestSchema',
+        }
+        File.write(File.join(tmpdir, 'graphql-coverage-1.json'), JSON.generate(content1))
+        File.write(File.join(tmpdir, 'graphql-coverage-2.json'), JSON.generate(content2))
+      end
+
+      it 'loads calls from files' do
+        GraphQL::Coverage.load(
+          File.join(tmpdir, 'graphql-coverage-1.json'),
+          File.join(tmpdir, 'graphql-coverage-2.json'),
+        )
+
+        expect(GraphQL::Coverage::Store.current.calls).to contain_exactly(
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
+        )
+      end
+    end
+
+    context 'when files have different schema' do
+      before do
+        content1 = {
+          'calls' => [
+            { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+          ],
+          'schema' => 'TestSchema',
+        }
+        content2 = {
+          'calls' => [
+            { 'owner' => 'Query', 'field' => 'title', 'result_type' => nil },
+          ],
+          'schema' => 'String',
+        }
+        File.write(File.join(tmpdir, 'graphql-coverage-1.json'), JSON.generate(content1))
+        File.write(File.join(tmpdir, 'graphql-coverage-2.json'), JSON.generate(content2))
+      end
+
+      it 'loads calls from files' do
+        expect do
+          GraphQL::Coverage.load(
+            File.join(tmpdir, 'graphql-coverage-1.json'),
+            File.join(tmpdir, 'graphql-coverage-2.json'),
+          )
+        end.to raise_error(GraphQL::Coverage::Errors::SchemaMismatch)
+      end
+    end
+  end
+
+  describe '.dump and .load' do
+    before do
+      execute!(<<~GRAPHQL)
+        query {
+          foo
+        }
+      GRAPHQL
+    end
+
+    it 'the loaded calls is the same' do
+      Dir.mktmpdir('graphql-coverage-test') do |dir|
+        calls = GraphQL::Coverage::Store.current.calls
+
+        path = File.join(dir, 'graphql-coverage.json')
+        GraphQL::Coverage.dump(path)
+
+        GraphQL::Coverage.reset!
+        GraphQL::Coverage.load(path)
+
+        expect(GraphQL::Coverage::Store.current.calls).to eq(calls)
       end
     end
   end
