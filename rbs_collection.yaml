@@ -14,3 +14,4 @@ gems:
   - name: graphql
   - name: json
   - name: pathname
+  - name: optparse
