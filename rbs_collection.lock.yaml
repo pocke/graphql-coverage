@@ -13,6 +13,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: optparse
+  version: '0'
+  source:
+    type: stdlib
 - name: pathname
   version: '0'
   source:

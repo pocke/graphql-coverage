@@ -43,11 +43,13 @@ module GraphQL
       res = result
       if res.empty?
         output.puts "All fields are covered"
+        true
       else
         output.puts "Missing fields:"
         res.each do |call|
           output.puts "  #{call.owner}.#{call.field}"
         end
+        false
       end
     end
 

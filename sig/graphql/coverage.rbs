@@ -11,7 +11,7 @@ module GraphQL
 
     def self.load: (*String | Pathname file_paths) -> void
 
-    def self.report: (?output: IO) -> void
+    def self.report: (?output: IO) -> bool
 
     def self.result: () -> Array[Call]
 

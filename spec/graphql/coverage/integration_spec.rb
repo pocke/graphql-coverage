@@ -10,7 +10,6 @@ RSpec.describe GraphQL::Coverage do
   end
 
   before do
-    GraphQL::Coverage.reset!
     GraphQL::Coverage.enable(schema)
   end
 

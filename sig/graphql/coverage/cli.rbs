@@ -1,0 +1,18 @@
+module GraphQL
+  module Coverage
+    class CLI
+      type params = {
+        :'fail-on-uncovered' => bool,
+      }
+
+      def initialize: (stdout: IO, stderr: IO) -> void
+
+      def run: (Array[String] argv) -> Integer
+
+      private
+
+      attr_reader stdout: IO
+      attr_reader stderr: IO
+    end
+  end
+end
