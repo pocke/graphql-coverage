@@ -13,7 +13,7 @@ module GraphQL
       def run(argv)
         # @type var params: params
         params = {
-          fail_on_uncovered: true,
+          'fail-on-uncovered': true,
         }
 
         args = OptionParser.new do |opts|
@@ -23,12 +23,12 @@ module GraphQL
           end
 
           opts.on('--[no-]fail-on-uncovered', 'Fail when there are uncovered fields (default: true).')
-        end.parse(argv)
+        end.parse(argv, into: _ = params)
 
         Coverage.load(*args)
 
         ok = Coverage.report(output: stdout)
-        if ok || !params[:fail_on_uncovered]
+        if ok || !params[:'fail-on-uncovered']
           return 0
         else
           1

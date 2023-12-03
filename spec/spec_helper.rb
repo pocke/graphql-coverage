@@ -16,5 +16,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.before do
+    GraphQL::Coverage.reset!
+  end
+
   Pathname(__dir__).glob('support/**/*.rb').each { |f| require f }
 end
