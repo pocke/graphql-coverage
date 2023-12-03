@@ -24,6 +24,7 @@ module GraphQL
 
             Options:
           TXT
+          opts.version = VERSION
           opts.on('-r', '--require PATH', 'Require a file.') do |path|
             require path
           end
