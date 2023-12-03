@@ -17,7 +17,13 @@ module GraphQL
         }
 
         args = OptionParser.new do |opts|
-          opts.banner = 'Usage: graphql-coverage [options] [result file paths]'
+          opts.banner = <<~TXT
+            Usage: graphql-coverage [options] [result file paths]
+
+            Display the coverage result from multiple result files.
+
+            Options:
+          TXT
           opts.on('-r', '--require PATH', 'Require a file.') do |path|
             require path
           end
