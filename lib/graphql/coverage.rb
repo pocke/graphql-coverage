@@ -23,7 +23,7 @@ module GraphQL
 
     def self.dump(file_path)
       calls = Store.current.calls.map(&:to_h)
-      content = JSON.generate({ calls: calls, schema: @schema.name })
+      content = JSON.generate({ calls: calls, schema: @schema.name, ignored_fields: ignored_fields })
       File.write(_ = file_path, content)
     end
 
@@ -31,6 +31,7 @@ module GraphQL
       file_paths.each do |file_path|
         content = JSON.parse(File.read(_ = file_path))
         self.schema = Object.const_get(content['schema'])
+        self.ignored_fields = content['ignored_fields']
 
         content['calls'].each do |call_hash|
           call = Call.new(owner: call_hash['owner'], field: call_hash['field'], result_type: call_hash['result_type'])
