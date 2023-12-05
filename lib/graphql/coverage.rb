@@ -72,5 +72,7 @@ module GraphQL
 
       @schema = schema
     end
+
+    reset!
   end
 end
