@@ -130,6 +130,8 @@ RSpec.describe GraphQL::Coverage do
           foo
         }
       GRAPHQL
+
+      GraphQL::Coverage.ignored_fields = [{ owner: 'Query', field: 'title' }]
     end
 
     include_context :mktmpdir
@@ -144,6 +146,7 @@ RSpec.describe GraphQL::Coverage do
           { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
         ],
         'schema' => 'TestSchema',
+        'ignored_fields' => [{ 'owner' => 'Query', 'field' => 'title' }],
       })
     end
   end
@@ -158,12 +161,14 @@ RSpec.describe GraphQL::Coverage do
             { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
           ],
           'schema' => 'TestSchema',
+          'ignored_fields' => [{ 'owner' => 'Article', 'field' => '*' }],
         }
         content2 = {
           'calls' => [
             { 'owner' => 'Query', 'field' => 'title', 'result_type' => nil },
           ],
           'schema' => 'TestSchema',
+          'ignored_fields' => [{ 'owner' => 'Article', 'field' => '*' }],
         }
         File.write(tmpdir / 'graphql-coverage-1.json', JSON.generate(content1))
         File.write(tmpdir / 'graphql-coverage-2.json', JSON.generate(content2))
@@ -179,6 +184,7 @@ RSpec.describe GraphQL::Coverage do
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
           GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
         )
+        expect(GraphQL::Coverage.ignored_fields).to eq [{ 'owner' => 'Article', 'field' => '*' }]
       end
     end
 
