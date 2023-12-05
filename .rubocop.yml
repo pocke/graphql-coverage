@@ -13,3 +13,7 @@ Layout/LineLength:
 
 Layout/FirstHashElementIndentation:
   Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - spec/exe/graphql-coverage_spec.rb
