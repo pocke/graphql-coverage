@@ -16,7 +16,7 @@ RSpec.describe GraphQL::Coverage do
   describe '.result' do
     context "without graphql executions" do
       it 'returns result including all fields' do
-        expect(GraphQL::Coverage.result).to contain_exactly(
+        expect(GraphQL::Coverage.result.uncovered_fields).to contain_exactly(
           GraphQL::Coverage::Call.new(type: 'Query', field: 'foo', result_type: nil),
           GraphQL::Coverage::Call.new(type: 'Query', field: 'title', result_type: nil),
           GraphQL::Coverage::Call.new(type: 'Query', field: 'articles', result_type: nil),
@@ -39,7 +39,7 @@ RSpec.describe GraphQL::Coverage do
       end
 
       it 'returns result without called fields' do
-        expect(GraphQL::Coverage.result).to contain_exactly(
+        expect(GraphQL::Coverage.result.uncovered_fields).to contain_exactly(
           GraphQL::Coverage::Call.new(type: 'Query', field: 'foo', result_type: nil),
           GraphQL::Coverage::Call.new(type: 'Query', field: 'title', result_type: nil),
           GraphQL::Coverage::Call.new(type: 'Query', field: 'withLazy', result_type: nil),
@@ -76,7 +76,7 @@ RSpec.describe GraphQL::Coverage do
       end
 
       it 'returns an empty array' do
-        expect(GraphQL::Coverage.result).to be_empty
+        expect(GraphQL::Coverage.result.uncovered_fields).to be_empty
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe GraphQL::Coverage do
         end
 
         it 'returns an empty array' do
-          expect(GraphQL::Coverage.result).to be_empty
+          expect(GraphQL::Coverage.result.uncovered_fields).to be_empty
         end
       end
 
@@ -117,7 +117,7 @@ RSpec.describe GraphQL::Coverage do
         end
 
         it 'returns an empty array' do
-          expect(GraphQL::Coverage.result).to be_empty
+          expect(GraphQL::Coverage.result.uncovered_fields).to be_empty
         end
       end
     end

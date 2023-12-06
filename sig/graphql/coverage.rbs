@@ -16,7 +16,7 @@ module GraphQL
 
     def self.report!: (?output: IO) -> void
 
-    def self.result: () -> Array[Call]
+    def self.result: () -> Result
 
     # @api private
     def self.reset!: () -> untyped

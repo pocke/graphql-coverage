@@ -7,14 +7,20 @@ module GraphQL
       def initialize(calls:, schema:, ignored_fields:)
         @calls = calls.uniq
         @schema = schema
-        @ignored_fields = ignored_fields
+        @ignored_field_patterns = ignored_fields
       end
 
-      def calculate
-        reject_ignored_fields(available_fields - @calls)
+      def covered_fields
+        @calls
       end
 
-      private
+      def uncovered_fields
+        @uncovered_fields ||= reject_ignored_fields(available_fields - @calls)
+      end
+
+      def ignored_fields
+        available_fields - uncovered_fields - @calls
+      end
 
       def available_fields
         # @type var target_types: Array[singleton(GraphQL::Schema::Object)]
@@ -29,7 +35,7 @@ module GraphQL
 
       def reject_ignored_fields(calls)
         calls.reject do |call|
-          @ignored_fields.any? do |ignored_field|
+          @ignored_field_patterns.any? do |ignored_field|
             type = __skip__ = ignored_field[:type] || ignored_field['type']
             field = __skip__ = ignored_field[:field] || ignored_field['field']
             match_pattern?(type, call.type) && match_pattern?(field, call.field)

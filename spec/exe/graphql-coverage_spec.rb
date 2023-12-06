@@ -25,7 +25,10 @@ RSpec.describe 'graphql-coverage' do
       it 'returns 0' do
         stdout, stderr, status = Open3.capture3(exe, '-r', fixture_path, path.to_s)
         expect(status).to be_success
-        expect(stdout).to eq "All fields are covered\n"
+        expect(stdout).to eq <<~MSG
+          All fields are covered
+          2 / 2 fields covered (100.00%)
+        MSG
         expect(stderr).to eq ""
       end
     end
@@ -50,7 +53,10 @@ RSpec.describe 'graphql-coverage' do
       it 'returns 0' do
         stdout, stderr, status = Open3.capture3(exe, '-r', fixture_path, path1.to_s, path2.to_s)
         expect(status).to be_success
-        expect(stdout).to eq "All fields are covered\n"
+        expect(stdout).to eq <<~MSG
+          All fields are covered
+          2 / 2 fields covered (100.00%)
+        MSG
         expect(stderr).to eq ""
       end
     end
@@ -70,7 +76,11 @@ RSpec.describe 'graphql-coverage' do
       it 'returns 0' do
         stdout, stderr, status = Open3.capture3(exe, '-r', fixture_path, path.to_s)
         expect(status).to be_success
-        expect(stdout).to eq "All fields are covered\n"
+        expect(stdout).to eq <<~MSG
+          All fields are covered
+          1 / 2 fields covered (50.00%)
+          1 / 2 fields ignored (50.00%)
+        MSG
         expect(stderr).to eq ""
       end
     end
@@ -90,7 +100,12 @@ RSpec.describe 'graphql-coverage' do
       it 'returns 1' do
         stdout, stderr, status = Open3.capture3(exe, '-r', fixture_path, path.to_s)
         expect(status).not_to be_success
-        expect(stdout).to eq "Missing fields:\n  Query.bar\n"
+        expect(stdout).to eq <<~MSG
+          There are uncovered fields
+          1 / 2 fields covered (50.00%)
+          Missing fields:
+            Query.bar
+        MSG
         expect(stderr).to eq ''
       end
 
@@ -98,7 +113,12 @@ RSpec.describe 'graphql-coverage' do
         it 'returns 0' do
           stdout, stderr, status = Open3.capture3(exe, '-r', fixture_path, '--no-fail-on-uncovered', path.to_s)
           expect(status).to be_success
-          expect(stdout).to eq "Missing fields:\n  Query.bar\n"
+          expect(stdout).to eq <<~MSG
+            There are uncovered fields
+            1 / 2 fields covered (50.00%)
+            Missing fields:
+              Query.bar
+          MSG
           expect(stderr).to eq ''
         end
       end

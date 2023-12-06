@@ -28,7 +28,10 @@ RSpec.describe GraphQL::Coverage::CLI do
 
       it 'returns 0' do
         expect(cli.run([path.to_s])).to eq 0
-        expect(stdout.string).to eq("All fields are covered\n")
+        expect(stdout.string).to eq <<~MSG
+          All fields are covered
+          2 / 2 fields covered (100.00%)
+        MSG
         expect(stderr.string).to be_empty
       end
     end
@@ -45,14 +48,24 @@ RSpec.describe GraphQL::Coverage::CLI do
 
       it 'returns 1' do
         expect(cli.run([path.to_s])).to eq 1
-        expect(stdout.string).to eq "Missing fields:\n  Query.bar\n"
+        expect(stdout.string).to eq <<~MSG
+          There are uncovered fields
+          1 / 2 fields covered (50.00%)
+          Missing fields:
+            Query.bar
+        MSG
         expect(stderr.string).to be_empty
       end
 
       context 'with --no-fail-on-uncovered' do
         it 'returns 0' do
           expect(cli.run([path.to_s, '--no-fail-on-uncovered'])).to eq 0
-          expect(stdout.string).to eq "Missing fields:\n  Query.bar\n"
+          expect(stdout.string).to eq <<~MSG
+            There are uncovered fields
+            1 / 2 fields covered (50.00%)
+            Missing fields:
+              Query.bar
+          MSG
           expect(stderr.string).to be_empty
         end
       end
