@@ -4,15 +4,20 @@ module GraphQL
     class Result
       @calls: Array[Call]
       @schema: singleton(GraphQL::Schema)
-      @ignored_fields: Array[ignored_field]
+      @ignored_field_patterns: Array[ignored_field]
+      @uncovered_fields: Array[Call]
 
       def initialize: (calls: Array[Call], schema: singleton(GraphQL::Schema), ignored_fields: Array[ignored_field]) -> void
 
-      def calculate: () -> Array[Call]
+      def covered_fields: () -> Array[Call]
 
-      private
+      def uncovered_fields: () -> Array[Call]
+
+      def ignored_fields: () -> Array[Call]
 
       def available_fields: () -> Array[Call]
+
+      private
 
       def reject_ignored_fields: (Array[Call]) -> Array[Call]
 

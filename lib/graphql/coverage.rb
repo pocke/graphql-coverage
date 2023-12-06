@@ -42,12 +42,28 @@ module GraphQL
 
     def self.report(output: $stdout)
       res = result
-      if res.empty?
+
+      puts_rate = proc do
+        available_size = res.available_fields.size
+        covered_size = res.covered_fields.size
+        ignored_size = res.ignored_fields.size
+
+        cover_rate = sprintf("%.2f", covered_size.to_f / available_size * 100)
+        ignore_rate = sprintf("%.2f", ignored_size.to_f / available_size * 100)
+
+        output.puts "#{covered_size} / #{available_size} fields covered (#{cover_rate}%)"
+        output.puts "#{ignored_size} / #{available_size} fields ignored (#{ignore_rate}%)" if 0 < ignored_size
+      end
+
+      if res.uncovered_fields.empty?
         output.puts "All fields are covered"
+        puts_rate.call
         true
       else
+        output.puts "There are uncovered fields"
+        puts_rate.call
         output.puts "Missing fields:"
-        res.each do |call|
+        res.uncovered_fields.each do |call|
           output.puts "  #{call.type}.#{call.field}"
         end
         false
@@ -59,7 +75,7 @@ module GraphQL
     end
 
     def self.result
-      Result.new(calls: Store.current.calls, schema: @schema, ignored_fields: ignored_fields).calculate
+      Result.new(calls: Store.current.calls, schema: @schema, ignored_fields: ignored_fields)
     end
 
     # @api private
