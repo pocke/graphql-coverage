@@ -4,6 +4,9 @@ module GraphQL
       class SchemaMismatch < StandardError
         def initialize: (expected: untyped, got: untyped) -> void
       end
+
+      class UncoveredFields < StandardError
+      end
     end
   end
 end

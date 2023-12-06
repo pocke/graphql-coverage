@@ -8,6 +8,9 @@ module GraphQL
           super("Schema mismatch: expected #{expected}, got #{got}")
         end
       end
+
+      class UncoveredFields < StandardError
+      end
     end
   end
 end
