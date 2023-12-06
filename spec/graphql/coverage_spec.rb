@@ -17,12 +17,12 @@ RSpec.describe GraphQL::Coverage do
     context "without graphql executions" do
       it 'returns result including all fields' do
         expect(GraphQL::Coverage.result).to contain_exactly(
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'articles', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Article', field: 'title', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Article', field: 'body', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'title', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'articles', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'withLazy', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Article', field: 'title', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Article', field: 'body', result_type: nil),
         )
       end
     end
@@ -40,10 +40,10 @@ RSpec.describe GraphQL::Coverage do
 
       it 'returns result without called fields' do
         expect(GraphQL::Coverage.result).to contain_exactly(
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'withLazy', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Article', field: 'body', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'title', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'withLazy', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Article', field: 'body', result_type: nil),
         )
       end
     end
@@ -84,8 +84,8 @@ RSpec.describe GraphQL::Coverage do
       context 'with wildcard' do
         before do
           GraphQL::Coverage.ignored_fields = [
-            { owner: 'Query', field: '*' },
-            { owner: '*', field: 'title' },
+            { type: 'Query', field: '*' },
+            { type: '*', field: 'title' },
           ]
 
           execute!(<<~GRAPHQL)
@@ -103,8 +103,8 @@ RSpec.describe GraphQL::Coverage do
       context 'with specific field' do
         before do
           GraphQL::Coverage.ignored_fields = [
-            { owner: 'Query', field: 'foo' },
-            { owner: 'Article', field: 'title' },
+            { type: 'Query', field: 'foo' },
+            { type: 'Article', field: 'title' },
           ]
 
           execute!(<<~GRAPHQL)
@@ -131,7 +131,7 @@ RSpec.describe GraphQL::Coverage do
         }
       GRAPHQL
 
-      GraphQL::Coverage.ignored_fields = [{ owner: 'Query', field: 'title' }]
+      GraphQL::Coverage.ignored_fields = [{ type: 'Query', field: 'title' }]
     end
 
     include_context :mktmpdir
@@ -143,10 +143,10 @@ RSpec.describe GraphQL::Coverage do
       saved = JSON.parse(File.read(path))
       expect(saved).to eq({
         'calls' => [
-          { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+          { 'type' => 'Query', 'field' => 'foo', 'result_type' => nil },
         ],
         'schema' => 'TestSchema',
-        'ignored_fields' => [{ 'owner' => 'Query', 'field' => 'title' }],
+        'ignored_fields' => [{ 'type' => 'Query', 'field' => 'title' }],
       })
     end
   end
@@ -158,17 +158,17 @@ RSpec.describe GraphQL::Coverage do
       before do
         content1 = {
           'calls' => [
-            { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+            { 'type' => 'Query', 'field' => 'foo', 'result_type' => nil },
           ],
           'schema' => 'TestSchema',
-          'ignored_fields' => [{ 'owner' => 'Article', 'field' => '*' }],
+          'ignored_fields' => [{ 'type' => 'Article', 'field' => '*' }],
         }
         content2 = {
           'calls' => [
-            { 'owner' => 'Query', 'field' => 'title', 'result_type' => nil },
+            { 'type' => 'Query', 'field' => 'title', 'result_type' => nil },
           ],
           'schema' => 'TestSchema',
-          'ignored_fields' => [{ 'owner' => 'Article', 'field' => '*' }],
+          'ignored_fields' => [{ 'type' => 'Article', 'field' => '*' }],
         }
         File.write(tmpdir / 'graphql-coverage-1.json', JSON.generate(content1))
         File.write(tmpdir / 'graphql-coverage-2.json', JSON.generate(content2))
@@ -181,10 +181,10 @@ RSpec.describe GraphQL::Coverage do
         )
 
         expect(GraphQL::Coverage::Store.current.calls).to contain_exactly(
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'foo', result_type: nil),
-          GraphQL::Coverage::Call.new(owner: 'Query', field: 'title', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'foo', result_type: nil),
+          GraphQL::Coverage::Call.new(type: 'Query', field: 'title', result_type: nil),
         )
-        expect(GraphQL::Coverage.ignored_fields).to eq [{ 'owner' => 'Article', 'field' => '*' }]
+        expect(GraphQL::Coverage.ignored_fields).to eq [{ 'type' => 'Article', 'field' => '*' }]
       end
     end
 
@@ -194,13 +194,13 @@ RSpec.describe GraphQL::Coverage do
       before do
         content1 = {
           'calls' => [
-            { 'owner' => 'Query', 'field' => 'foo', 'result_type' => nil },
+            { 'type' => 'Query', 'field' => 'foo', 'result_type' => nil },
           ],
           'schema' => 'TestSchema',
         }
         content2 = {
           'calls' => [
-            { 'owner' => 'Query', 'field' => 'title', 'result_type' => nil },
+            { 'type' => 'Query', 'field' => 'title', 'result_type' => nil },
           ],
           'schema' => 'String',
         }

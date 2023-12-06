@@ -62,7 +62,7 @@ RSpec.describe 'graphql-coverage' do
         require_relative fixture_path
 
         GraphQL::Coverage.enable(TestFixtureSchema)
-        GraphQL::Coverage.ignored_fields = [{ owner: 'Query', field: 'bar' }]
+        GraphQL::Coverage.ignored_fields = [{ type: 'Query', field: 'bar' }]
         TestFixtureSchema.execute('{ foo }')
         GraphQL::Coverage.dump(path)
       end

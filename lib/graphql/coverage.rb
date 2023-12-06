@@ -34,7 +34,7 @@ module GraphQL
         self.ignored_fields = content['ignored_fields']
 
         content['calls'].each do |call_hash|
-          call = Call.new(owner: call_hash['owner'], field: call_hash['field'], result_type: call_hash['result_type'])
+          call = Call.new(type: call_hash['type'], field: call_hash['field'], result_type: call_hash['result_type'])
           Store.current.append(call)
         end
       end
@@ -48,7 +48,7 @@ module GraphQL
       else
         output.puts "Missing fields:"
         res.each do |call|
-          output.puts "  #{call.owner}.#{call.field}"
+          output.puts "  #{call.type}.#{call.field}"
         end
         false
       end

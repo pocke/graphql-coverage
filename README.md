@@ -98,16 +98,16 @@ RSpec.configure do |config|
     GraphQL::Coverage.enable(YourSchema)
     GraphQL::Coverage.ignored_fields = [
       # GraphQL::Coverage does not complain about the coverage of `Article`'s `title` field.
-      { owner: 'Article', field: 'title' },
+      { type: 'Article', field: 'title' },
       # You can use `*` as a wildcard.
-      { owner: '*', field: 'id' },
+      { type: '*', field: 'id' },
       {}
     ]
   end
 end
 ```
 
-I recommend specifying `[{ owner: '*', field: 'edges' }, { owner: '*', field: 'nodes' }, { owner: '*', field: 'cursor' }]` to ignore fields for Relay Connection.
+I recommend specifying `[{ type: '*', field: 'edges' }, { type: '*', field: 'nodes' }, { type: '*', field: 'cursor' }]` to ignore fields for Relay Connection.
 
 ## Development
 

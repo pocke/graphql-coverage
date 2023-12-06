@@ -30,9 +30,9 @@ module GraphQL
       def reject_ignored_fields(calls)
         calls.reject do |call|
           @ignored_fields.any? do |ignored_field|
-            owner = __skip__ = ignored_field[:owner] || ignored_field['owner']
+            type = __skip__ = ignored_field[:type] || ignored_field['type']
             field = __skip__ = ignored_field[:field] || ignored_field['field']
-            match_pattern?(owner, call.owner) && match_pattern?(field, call.field)
+            match_pattern?(type, call.type) && match_pattern?(field, call.field)
           end
         end
       end
