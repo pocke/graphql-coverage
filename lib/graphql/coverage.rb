@@ -54,6 +54,10 @@ module GraphQL
       end
     end
 
+    def self.report!(output: $stdout)
+      report(output: output) or raise Errors::UncoveredFields
+    end
+
     def self.result
       Result.new(calls: Store.current.calls, schema: @schema, ignored_fields: ignored_fields).calculate
     end

@@ -14,6 +14,8 @@ module GraphQL
 
     def self.report: (?output: IO) -> bool
 
+    def self.report!: (?output: IO) -> void
+
     def self.result: () -> Array[Call]
 
     # @api private
