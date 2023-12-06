@@ -2,11 +2,11 @@ module GraphQL
   module Coverage
     # @api private
     class Call
-      attr_accessor owner: String
+      attr_accessor type: String
       attr_accessor field: String
       attr_accessor result_type: nil
 
-      def initialize: (owner: String, field: String, result_type: nil) -> void
+      def initialize: (type: String, field: String, result_type: nil) -> void
 
       def self.from_graphql_object: (field: GraphQL::Schema::Field, result_type: untyped) -> instance
     end
