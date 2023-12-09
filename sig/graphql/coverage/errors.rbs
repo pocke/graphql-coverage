@@ -1,10 +1,12 @@
 module GraphQL
   module Coverage
     module Errors
+      # It occurs when the dumped files have different schemas.
       class SchemaMismatch < StandardError
         def initialize: (expected: untyped, got: untyped) -> void
       end
 
+      # It occurs when the schema is not fully covered by the tests.
       class UncoveredFields < StandardError
       end
     end
