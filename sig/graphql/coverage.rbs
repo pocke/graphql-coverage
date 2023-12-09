@@ -2,26 +2,38 @@ module GraphQL
   module Coverage
     type ignored_field = { type: String, field: String }
                        | { "type" => String, "field" => String }
+
+    # Specify fields to ignore in the coverage report.
+    # default: []
     attr_accessor self.ignored_fields: Array[ignored_field]
 
     self.@schema: singleton(GraphQL::Schema)
 
+    # Enable coverage tracking for the given schema.
     def self.enable: (singleton(GraphQL::Schema) schema) -> void
 
+    # Dump the current coverage data to a file.
     def self.dump: (String | Pathname file_path) -> void
 
+    # Load coverage data from specified files.
     def self.load: (*String | Pathname file_paths) -> void
 
+    # Report coverage result to the `output`.
+    #
+    # It reports to the `STDOUT` by default.
+    # It returns `true` if the coverage is 100%.
     def self.report: (?output: IO) -> bool
 
+    # Same as `report` but it raises an error if the coverage is not 100%.
     def self.report!: (?output: IO) -> void
 
+    # @api private
     def self.result: () -> Result
 
     # @api private
     def self.reset!: () -> untyped
 
     # @api private
-    def self.schema=: (untyped schema) -> untyped
+    private def self.schema=: (untyped schema) -> untyped
   end
 end
