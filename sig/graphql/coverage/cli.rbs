@@ -1,5 +1,6 @@
 module GraphQL
   module Coverage
+    # @api private
     class CLI
       type params = {
         :'fail-on-uncovered' => bool,
