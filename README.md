@@ -22,7 +22,7 @@ So I need to develop a tool that can check the coverage of GraphQL fields.
 Install the gem and add to the application's Gemfile by executing:
 
 ```
-$ bundle add graphql-coverage --require false
+$ bundle add graphql-coverage --require false --group test
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
@@ -44,6 +44,7 @@ If your RSpec runs on a single process, add the following code to `spec_helper.r
 ```ruby
 RSpec.configure do |config|
   config.before(:suite) do
+    require 'graphql/coverage'
     # Pass a class that inherits `GraphQL::Schema`.
     GraphQL::Coverage.enable(YourSchema)
   end
@@ -106,7 +107,15 @@ RSpec.configure do |config|
 end
 ```
 
-I recommend specifying `[{ type: '*', field: 'edges' }, { type: '*', field: 'nodes' }, { type: '*', field: 'cursor' }]` to ignore fields for Relay Connection.
+I recommend specifying the following configuration in most cases to ignore fields for Relay Connection.
+
+```ruby
+GraphQL::Coverage.ignored_fields = [
+  { type: '*', field: 'edges' },
+  { type: '*', field: 'node' },
+  { type: '*', field: 'cursor' },
+]
+```
 
 ## Development
 
