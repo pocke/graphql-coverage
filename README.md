@@ -101,7 +101,6 @@ RSpec.configure do |config|
       { type: 'Article', field: 'title' },
       # You can use `*` as a wildcard.
       { type: '*', field: 'id' },
-      {}
     ]
   end
 end
