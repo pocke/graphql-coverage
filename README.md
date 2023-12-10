@@ -44,6 +44,7 @@ If your RSpec runs on a single process, add the following code to `spec_helper.r
 ```ruby
 RSpec.configure do |config|
   config.before(:suite) do
+    require 'graphql/coverage'
     # Pass a class that inherits `GraphQL::Schema`.
     GraphQL::Coverage.enable(YourSchema)
   end
