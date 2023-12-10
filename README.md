@@ -82,7 +82,7 @@ After running RSpec, you can aggregate the coverage results and display the cove
 
 ```console
 # It displays the same report as `GraphQL::Coverage.report!`.
-$ graphql-coverage --require ./config/environment.rb tmp/graphql-coverage-*.json
+$ bundle exec graphql-coverage --require ./config/environment.rb tmp/graphql-coverage-*.json
 ```
 
 You must specify `--require` (or `-r`) option to load the schema. If you use Rails, you can specify `./config/environment.rb` as the argument of `--require` option.
