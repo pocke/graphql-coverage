@@ -55,6 +55,7 @@ module GraphQL
         output.puts "#{ignored_size} / #{available_size} fields ignored (#{ignore_rate}%)" if 0 < ignored_size
       end
 
+      puts
       if res.uncovered_fields.empty?
         output.puts "All fields are covered"
         puts_rate.call
