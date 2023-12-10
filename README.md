@@ -21,13 +21,13 @@ So I need to develop a tool that can check the coverage of GraphQL fields.
 
 Install the gem and add to the application's Gemfile by executing:
 
-```
+```console
 $ bundle add graphql-coverage --require false --group test
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-```
+```console
 $ gem install graphql-coverage
 ```
 
@@ -80,7 +80,8 @@ end
 
 After running RSpec, you can aggregate the coverage results and display the coverage with the following command:
 
-```sh
+```console
+# It displays the same report as `GraphQL::Coverage.report!`.
 $ graphql-coverage --require ./config/environment.rb tmp/graphql-coverage-*.json
 ```
 
