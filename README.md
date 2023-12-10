@@ -22,7 +22,7 @@ So I need to develop a tool that can check the coverage of GraphQL fields.
 Install the gem and add to the application's Gemfile by executing:
 
 ```
-$ bundle add graphql-coverage --require false
+$ bundle add graphql-coverage --require false --group test
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
