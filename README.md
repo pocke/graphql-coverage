@@ -107,7 +107,15 @@ RSpec.configure do |config|
 end
 ```
 
-I recommend specifying `[{ type: '*', field: 'edges' }, { type: '*', field: 'nodes' }, { type: '*', field: 'cursor' }]` to ignore fields for Relay Connection.
+I recommend specifying the following configuration in most cases to ignore fields for Relay Connection.
+
+```ruby
+GraphQL::Coverage.ignored_fields = [
+  { type: '*', field: 'edges' },
+  { type: '*', field: 'node' },
+  { type: '*', field: 'cursor' },
+]
+```
 
 ## Development
 
