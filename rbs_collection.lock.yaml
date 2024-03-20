@@ -6,7 +6,7 @@ gems:
   source:
     type: git
     name: ruby/gem_rbs_collection
-    revision: 4b0d2f72e63b6c3e92dc54e19ce23dd24524f9a7
+    revision: be76a75932e8ed6ee91a95ba936cf88b674bf044
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
 - name: json

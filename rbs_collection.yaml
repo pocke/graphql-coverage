@@ -9,9 +9,6 @@ sources:
 path: .gem_rbs_collection
 
 gems:
-  - name: graphql-coverage
-    ignore: true
-  - name: graphql
   - name: json
   - name: pathname
   - name: optparse
